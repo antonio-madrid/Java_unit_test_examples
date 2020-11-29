@@ -1,5 +1,5 @@
 # Java testing samples
-A several samples of JUnit 4 and Mockito test
+A several samples of <i><strong>JUnit 4</strong></i> and <i><strong>Mockito</strong></i> test
 
-These templates are a simple one to expose JUnit and Mockito basic testing.
+These templates are a simple one to expose <i>JUnit</i> and <i>Mockito</i> basic testing.
 ``
