@@ -11,6 +11,7 @@ import org.mockito.Mockito;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,7 +54,37 @@ public class MovieServiceIT {
 
     }
 
+    @Test
+    public void should_return_action_movies_shorter_than_2_hours() {
+        // 150m = 2h 30m
+        Movie template = new Movie(null, 150, Genre.ACTION);
+        Collection<Movie> movies = movieService.findByTemplate(template);
+
+        assertThat(getMovieIds(movies), is(Collections.singletonList(7)));
+
+        // nombre y genero
+        // genero y duracion
+
+    }
+
+    @Test
+    public void should_return_movies_by_name_and_duration() {
+        Movie template = new Movie("ma", 150);
+        Collection<Movie> movies = movieService.findByTemplate(template);
+
+        assertThat(getMovieIds(movies), is(Arrays.asList(3, 7)));
+    }
+
+    @Test
+    public void should_return_movies_by_name_and_genre() {
+        Movie template = new Movie("su", Genre.THRILLER);
+        Collection<Movie> movies = movieService.findByTemplate(template);
+
+        assertThat(getMovieIds(movies), is(Collections.singletonList(4)));
+    }
+
     private List<Integer> getMovieIds(Collection<Movie> movies) {
         return movies.stream().map(Movie::getId).collect(Collectors.toList());
     }
+
 }

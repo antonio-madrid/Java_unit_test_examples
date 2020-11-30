@@ -4,11 +4,11 @@ import java.util.Objects;
 
 public class Movie {
 
-    private final Integer id;
+    private Integer id;
     private final String name;
-    private final int minutes;
-    private final Genre genre;
-    private final String director;
+    private Integer minutes;
+    private Genre genre;
+    private String director;
 
     public Movie(Integer id, String name, int minutes, Genre genre, String director) {
         this.id = id;
@@ -16,6 +16,22 @@ public class Movie {
         this.minutes = minutes;
         this.genre = genre;
         this.director = director;
+    }
+
+    public Movie(String name, Integer minutes, Genre genre) {
+        this.name = name;
+        this.minutes = minutes;
+        this.genre = genre;
+    }
+
+    public Movie(String name, int minutes) {
+        this.name = name;
+        this.minutes = minutes;
+    }
+
+    public Movie(String name, Genre genre) {
+        this.name = name;
+        this.genre = genre;
     }
 
     public String getDirector() {
@@ -30,7 +46,7 @@ public class Movie {
         return name;
     }
 
-    public int getMinutes() {
+    public Integer getMinutes() {
         return minutes;
     }
 
@@ -43,7 +59,7 @@ public class Movie {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Movie movie = (Movie) o;
-        return minutes == movie.minutes &&
+        return Objects.equals(minutes, movie.minutes) &&
                 Objects.equals(id, movie.id) &&
                 Objects.equals(name, movie.name) &&
                 genre == movie.genre;
