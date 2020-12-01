@@ -4,7 +4,6 @@ import com.trikisoft.javatest.movies.data.MovieRepository;
 import com.trikisoft.javatest.movies.model.Genre;
 import com.trikisoft.javatest.movies.model.Movie;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
@@ -26,7 +25,7 @@ public class MovieService {
     public Collection<Movie> findMovieByLength(int length) {
 
         return movieRepository.findAll().stream()
-                .filter(movie -> movie.getMinutes() <= length ).collect(Collectors.toList());
+                .filter(movie -> movie.getMinutes() <= length).collect(Collectors.toList());
     }
 
     public Collection<Movie> findByTemplate(Movie template) {
@@ -35,7 +34,7 @@ public class MovieService {
             return Collections.singletonList(movieRepository.findById(template.getId()));
         }
 
-        if (template.getMinutes() < 0) {
+        if (template.getMinutes() != null && template.getMinutes() < 0) {
             throw new IllegalArgumentException("minutes cannot be negative");
         }
 
@@ -44,7 +43,7 @@ public class MovieService {
         return filtered.stream()
                 .filter(movie -> template.getName() == null || movie.getName().toLowerCase().contains(template.getName().toLowerCase()))
                 .filter(movie -> template.getMinutes() == null || movie.getMinutes() <= template.getMinutes())
-                .filter(movie -> template.getGenre() == null || movie.getGenre() == template.getGenre())
+                .filter(movie -> template.getGenre() == null || movie.getGenre().equals(template.getGenre()))
                 .filter(movie -> template.getDirector() == null || movie.getDirector().toLowerCase().contains(template.getDirector().toLowerCase()))
                 .collect(Collectors.toList());
     }

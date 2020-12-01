@@ -3,8 +3,6 @@ package com.trikisoft.javatest.movies.service;
 import com.trikisoft.javatest.movies.data.MovieRepository;
 import com.trikisoft.javatest.movies.model.Genre;
 import com.trikisoft.javatest.movies.model.Movie;
-import static org.hamcrest.CoreMatchers.is;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -15,11 +13,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertThat;
 
 public class MovieServiceIT {
 
     private MovieService movieService;
+    private Movie movieTemplate;
+    private Collection<Movie> movies;
 
     @Before
     public void setUp() throws Exception {
@@ -41,14 +43,14 @@ public class MovieServiceIT {
     // Example of service testing
     @Test
     public void should_return_movies_by_genre() {
-        Collection<Movie> movies = movieService.findMoviesByGenre(Genre.COMEDY);
+        movies = movieService.findMoviesByGenre(Genre.COMEDY);
 
         assertThat(getMovieIds(movies), is(Arrays.asList(3, 6)));
     }
 
     @Test
     public void should_return_movies_by_length() {
-        Collection<Movie> movies = movieService.findMovieByLength(119);
+        movies = movieService.findMovieByLength(119);
 
         assertThat(getMovieIds(movies), is(Arrays.asList(2, 3, 4, 5, 6)));
 
@@ -57,30 +59,83 @@ public class MovieServiceIT {
     @Test
     public void should_return_action_movies_shorter_than_2_hours() {
         // 150m = 2h 30m
-        Movie template = new Movie(null, 150, Genre.ACTION);
-        Collection<Movie> movies = movieService.findByTemplate(template);
+        movieTemplate = new Movie(null, 150, Genre.ACTION);
+        movies = movieService.findByTemplate(movieTemplate);
 
         assertThat(getMovieIds(movies), is(Collections.singletonList(7)));
-
-        // nombre y genero
-        // genero y duracion
-
     }
 
     @Test
     public void should_return_movies_by_name_and_duration() {
-        Movie template = new Movie("ma", 150);
-        Collection<Movie> movies = movieService.findByTemplate(template);
+        movieTemplate = new Movie("ma", 150);
+        movies = movieService.findByTemplate(movieTemplate);
 
         assertThat(getMovieIds(movies), is(Arrays.asList(3, 7)));
     }
 
     @Test
+    public void should_return_movies_by_name_by_duration_and_director() {
+        movieTemplate = new Movie("ma", 119, "Peter Farrelly");
+        movies = movieService.findByTemplate(movieTemplate);
+
+        assertThat(getMovieIds(movies), is(Collections.singletonList(3)));
+
+        movieTemplate = new Movie("", 152, "Nolan");
+        movies = movieService.findByTemplate(movieTemplate);
+
+        assertThat(getMovieIds(movies), is(Arrays.asList(1, 2)));
+    }
+
+    @Test
     public void should_return_movies_by_name_and_genre() {
-        Movie template = new Movie("su", Genre.THRILLER);
-        Collection<Movie> movies = movieService.findByTemplate(template);
+        movieTemplate = new Movie("su", Genre.THRILLER);
+        movies = movieService.findByTemplate(movieTemplate);
 
         assertThat(getMovieIds(movies), is(Collections.singletonList(4)));
+
+        movieTemplate = new Movie("a", Genre.ACTION);
+        movies = movieService.findByTemplate(movieTemplate);
+
+        assertThat(getMovieIds(movies), is(Arrays.asList(1, 7)));
+    }
+
+    @Test
+    public void should_return_movies_by_name_by_genre_and_director() {
+        movieTemplate = new Movie("su", Genre.THRILLER, "Abrams");
+        movies = movieService.findByTemplate(movieTemplate);
+
+        assertThat(getMovieIds(movies), is(Collections.singletonList(4)));
+
+        movieTemplate = new Movie("su", Genre.THRILLER, "p");
+        movies = movieService.findByTemplate(movieTemplate);
+
+        assertThat(getMovieIds(movies), not(Collections.singletonList(4)));
+    }
+
+    @Test
+    public void should_return_movies_by_genre_and_duration() {
+        movieTemplate = new Movie(null, 112, Genre.THRILLER);
+        movies = movieService.findByTemplate(movieTemplate);
+
+        assertThat(getMovieIds(movies), is(Collections.singletonList(4)));
+
+        movieTemplate = new Movie(null, 120, Genre.COMEDY);
+        movies = movieService.findByTemplate(movieTemplate);
+
+        assertThat(getMovieIds(movies), is(Arrays.asList(3, 6)));
+    }
+
+    @Test
+    public void should_return_movies_by_genre_by_duration_and_director() {
+        movieTemplate = new Movie(null, 112, Genre.THRILLER, "Abrams");
+        movies = movieService.findByTemplate(movieTemplate);
+
+        assertThat(getMovieIds(movies), is(Collections.singletonList(4)));
+
+        movieTemplate = new Movie(null, 120, Genre.COMEDY, "o");
+        movies = movieService.findByTemplate(movieTemplate);
+
+        assertThat(getMovieIds(movies), is(Arrays.asList(3, 6)));
     }
 
     private List<Integer> getMovieIds(Collection<Movie> movies) {

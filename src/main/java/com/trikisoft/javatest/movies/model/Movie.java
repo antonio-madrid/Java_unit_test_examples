@@ -4,35 +4,47 @@ import java.util.Objects;
 
 public class Movie {
 
-    private Integer id;
     private final String name;
+    private Integer id;
     private Integer minutes;
     private Genre genre;
     private String director;
-
-    public Movie(Integer id, String name, int minutes, Genre genre, String director) {
-        this.id = id;
-        this.name = name;
-        this.minutes = minutes;
-        this.genre = genre;
-        this.director = director;
-    }
-
-    public Movie(String name, Integer minutes, Genre genre) {
-        this.name = name;
-        this.minutes = minutes;
-        this.genre = genre;
-    }
 
     public Movie(String name, int minutes) {
         this.name = name;
         this.minutes = minutes;
     }
 
+    public Movie(String name, int minutes, Genre genre) {
+        this(name, minutes);
+        this.genre = genre;
+    }
+
+    public Movie(String name, int minutes, String director) {
+        this(name, minutes);
+        this.director = director;
+    }
+
+    public Movie(String name, int minutes, Genre genre, String director) {
+        this(name, minutes, genre);
+        this.director = director;
+    }
+
+    public Movie(Integer id, String name, int minutes, Genre genre, String director) {
+        this(name, minutes, genre, director);
+        this.id = id;
+    }
+
     public Movie(String name, Genre genre) {
         this.name = name;
         this.genre = genre;
     }
+
+    public Movie(String name, Genre genre, String director) {
+        this(name, genre);
+        this.director = director;
+    }
+
 
     public String getDirector() {
         return director;
